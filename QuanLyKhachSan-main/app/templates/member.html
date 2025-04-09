@@ -1,0 +1,142 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Thông tin khách hàng</h1>
+
+    <!-- Hiển thị thông tin khách hàng -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h3>Thông tin khách hàng</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Họ và tên:</strong> {{ user.name }}</p>
+        <p><strong>Số điện thoại:</strong> {{ user.phone }}</p>
+        <p><strong>Loại khách hàng:</strong> {{ user.customer_tier }}</p>
+        <p><strong>Tổng chi tiêu trong 1 năm:</strong> {{ user.annual_spending }} VND</p>
+      </div>
+    </div>
+
+    <!-- Hiển thị quyền lợi theo hạng khách hàng -->
+    <div class="card">
+      <div class="card-header bg-success text-white">
+        <h3>Quyền lợi thành viên</h3>
+      </div>
+      <div class="card-body">
+        {% if user.customer_tier == "VVIP" %}
+          <div class="alert alert-success">
+            <p>Chúc mừng bạn là thành viên <strong>VVIP</strong>. Bạn sẽ được giảm <strong>15%</strong> trên tổng hóa đơn.</p>
+          </div>
+        {% elif user.customer_tier == "VIP" %}
+          <div class="alert alert-warning">
+            <p>Chúc mừng bạn là thành viên <strong>VIP</strong>. Bạn sẽ được giảm <strong>10%</strong> trên tổng hóa đơn.</p>
+          </div>
+          {% elif user.customer_tier == "NORMAL" %}
+          <div class="alert alert-warning">
+            <p>Chúc mừng bạn là thành viên <strong>NORMAL</strong>. Bạn sẽ được giảm <strong>3%</strong> trên tổng hóa đơn.</p>
+          </div>
+          {% elif user.customer_tier == "NEW" %}
+          <div class="alert alert-warning">
+            <p>Chúc mừng bạn là thành viên <strong>NEW</strong>. Bạn sẽ được giảm <strong>5%</strong> trên tổng hóa đơn cho lần đặt đầu tiên này.</p>
+          </div>
+        {% else %}
+          <div class="alert alert-info">
+            <p>Chưa có quyền lợi giảm giá cho hạng khách hàng này.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="container my-5">
+    <h1 class="text-center mb-4">Chính sách ưu đãi đặc quyền thành viên T&T Hotel</h1>
+
+    <p class="lead text-center">Chào mừng bạn đến với T&T Hotel! Tham gia chương trình thành viên của chúng tôi để nhận các quyền lợi đặc biệt và ưu đãi hấp dẫn.</p>
+
+    <!-- Các hạng thành viên -->
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title text-center">Thành viên VVIP</h5>
+          </div>
+          <div class="card-body">
+            <p><strong>Điều kiện:</strong> Chi tiêu từ 50 triệu VND/năm trở lên.</p>
+            <p><strong>Quyền lợi:</strong></p>
+            <ul>
+              <li><strong>Giảm giá 15%</strong> trên tổng hóa đơn.</li>
+              <li>Dịch vụ ưu tiên, đặt phòng trước và quyền lợi đặc biệt.</li>
+              <li>Miễn phí 1 đêm nghỉ dưỡng mỗi năm.</li>
+              <li>Tham gia các sự kiện đặc biệt của khách sạn.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-header bg-success text-white">
+            <h5 class="card-title text-center">Thành viên VIP</h5>
+          </div>
+          <div class="card-body">
+            <p><strong>Điều kiện:</strong> Chi tiêu từ 25 triệu đến dưới 50 triệu VND/năm.</p>
+            <p><strong>Quyền lợi:</strong></p>
+            <ul>
+              <li><strong>Giảm giá 10%</strong> trên tổng hóa đơn.</li>
+              <li>Dịch vụ ưu tiên khi đặt phòng.</li>
+              <li>Tham gia các sự kiện nội bộ của T&T Hotel.</li>
+              <li>Chương trình tích điểm cho mỗi lần nghỉ dưỡng.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-header bg-warning text-white">
+            <h5 class="card-title text-center">Thành viên Thường</h5>
+          </div>
+          <div class="card-body">
+            <p><strong>Điều kiện:</strong> Mọi khách hàng đăng ký tài khoản.</p>
+            <p><strong>Quyền lợi:</strong></p>
+            <ul>
+              <li>Chương trình tích điểm cho mỗi lần sử dụng dịch vụ.</li>
+              <li><strong>Giảm giá 5%</strong> cho khách hàng đăng ký và đặt phòng lần đầu.</li>
+                <li><strong>Giảm giá 3%</strong>cho lần đặt phòng tiếp theo.</li>
+              <li>Cập nhật các chương trình khuyến mãi đặc biệt.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cách thức tham gia -->
+    <div class="my-5">
+      <h3>Cách thức tham gia</h3>
+      <p>Để trở thành thành viên của T&T Hotel, bạn chỉ cần đăng ký tài khoản trên website hoặc ứng dụng di động T&T Hotel. Sau khi đăng ký, bạn có thể tích lũy điểm và tham gia vào các chương trình khuyến mãi để đạt được hạng thành viên cao hơn.</p>
+    </div>
+
+    <!-- Lợi ích của việc tham gia -->
+    <div class="my-5">
+      <h3>Lợi ích của việc trở thành thành viên</h3>
+      <ul>
+        <li><strong>Tiết kiệm chi phí:</strong> Giảm giá và ưu đãi đặc biệt giúp bạn tiết kiệm chi phí khi sử dụng dịch vụ.</li>
+        <li><strong>Dịch vụ ưu tiên:</strong> Thành viên được ưu tiên khi đặt phòng và sử dụng dịch vụ.</li>
+        <li><strong>Chương trình tích điểm:</strong> Tích điểm và đổi quà cho các lần nghỉ dưỡng sau.</li>
+        <li><strong>Quyền lợi đặc biệt:</strong> Thành viên VVIP và VIP có cơ hội tham gia các sự kiện và nhận quà tặng từ khách sạn.</li>
+      </ul>
+    </div>
+
+    <!-- Lý do chọn T&T Hotel -->
+    <div class="my-5">
+      <h3>Tại sao chọn T&T Hotel?</h3>
+      <p>T&T Hotel luôn chú trọng đến chất lượng dịch vụ và sự hài lòng của khách hàng. Với hệ thống phòng nghỉ sang trọng, các dịch vụ tiện ích cao cấp và đội ngũ nhân viên chuyên nghiệp, chúng tôi cam kết mang đến cho bạn một kỳ nghỉ đáng nhớ. Tham gia chương trình thành viên để tận hưởng quyền lợi đặc biệt tại T&T Hotel!</p>
+    </div>
+  </div>
+<div class="text-center my-5">
+    <p class="lead">Đăng ký ngay để trở thành thành viên T&T Hotel và tận hưởng các ưu đãi đặc biệt cùng nhiều quyền lợi hấp dẫn!</p>
+    <a href="{{ url_for('register_process')}}" class="btn btn-primary btn-lg">Đăng ký ngay</a>
+  </div>
+{% endif %}
+{% endblock %}

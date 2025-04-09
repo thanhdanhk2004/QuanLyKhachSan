@@ -1,0 +1,196 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container my-5 p-4 rounded shadow" style="background-color: #F9F5EB;">
+    <div class="row align-items-center">
+        <!-- Carousel Hình ảnh khách sạn -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div id="hotelCarousel" class="carousel slide shadow rounded" data-bs-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-bs-target="#hotelCarousel" data-bs-slide-to="0" class="active"></li>
+                    <li data-bs-target="#hotelCarousel" data-bs-slide-to="1"></li>
+                    <li data-bs-target="#hotelCarousel" data-bs-slide-to="2"></li>
+                </ol>
+
+                <!-- Hình ảnh -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="static/images/ks2.jpg" class="d-block w-100 rounded" alt="Khách sạn T&T Hotel"
+                             style="object-fit: cover; height: 400px;">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="static/images/ks3.jpg" class="d-block w-100 rounded" alt="Phòng nghỉ hiện đại"
+                             style="object-fit: cover; height: 400px;">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="static/images/ks1.png" class="d-block w-100 rounded" alt="Hồ bơi khách sạn"
+                             style="object-fit: cover; height: 400px;">
+                    </div>
+                </div>
+
+                <!-- Điều khiển chuyển ảnh -->
+                <a class="carousel-control-prev" href="#hotelCarousel" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#hotelCarousel" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Giới thiệu về khách sạn -->
+        <div class="col-lg-6">
+            <h2 class="fw-bold text-center text-dark mb-4 display-4"
+                style="color: #4B3832; font-family: 'Playfair Display', serif; position: relative;">
+                <span style="background: linear-gradient(to right, #4B3832, #8B6A53);
+                             -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Chào mừng đến với T&T Hotel
+                </span>
+                <div class="text-center position-absolute w-100"
+                     style="bottom: -15px; height: 2px; background: linear-gradient(to right, #4B3832, #8B6A53);"></div>
+            </h2>
+            <p class="text-muted fs-5 mb-3" style="line-height: 1.8; color: #6B4F4F;">
+                Tọa lạc tại trung tâm thành phố, T&T Hotel là điểm đến lý tưởng cho những ai đang tìm kiếm sự sang trọng và thoải mái.
+                Chúng tôi cung cấp các dịch vụ tiêu chuẩn 5 sao, không gian ấm cúng và phong cách hiện đại.
+            </p>
+            <p class="text-muted fs-5 mb-4" style="line-height: 1.8; color: #6B4F4F;">
+                T&T Hotel có các phòng nghỉ đa dạng, phù hợp cho cả khách du lịch và doanh nhân. Bạn sẽ được tận hưởng không gian nghỉ dưỡng
+                tuyệt vời với tầm nhìn ra thành phố và các tiện ích cao cấp.
+            </p>
+            <a href="#services" class="btn btn-outline-primary px-4 py-2 me-3"
+               style="border-color: #4B3832; color: #4B3832;">
+                Khám phá dịch vụ
+            </a>
+            <a href="#tim_phong" class="btn btn-primary px-4 py-2"
+               style="background-color: #4B3832; border-color: #4B3832; color: #F9F5EB;">
+                Xem các loại phòng
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<main class="container d-flex justify-content-center align-items-center flex-column my-3" id="tim_phong">
+    <!-- Tiêu đề -->
+    <header class="mb-4 text-center">
+        <h1 class="fw-bold display-8"
+            style="color: #8B6A53; font-family: 'Playfair Display', serif;">
+            Các Loại Phòng của T&T Hotel
+        </h1>
+        <p class="fs-5" style="color: #6B4F4F;">
+            Khám phá các loại phòng phù hợp với nhu cầu của bạn
+        </p>
+    </header>
+
+    <!-- Danh sách phòng -->
+    <div class="row justify-content-center">
+        {% for r in RoomType %}
+        <div class="col-lg-6 col-md-8 col-sm-12 p-4">
+            <div class="card h-100 shadow-sm" style="border: 1px solid #D2B48C;">
+                <img class="card-img-top" src="{{ url_for('static', filename=r.image) }}"
+                     alt="{{ r.name }}" style="height: 400px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <!-- Tên phòng -->
+                    <h3 class="card-title fw-bold" style="color: #4B3832;">
+                        {{ r.name }}
+                    </h3>
+                    <!-- Giá và số lượng khách -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-bold" style="color: #8B6A53;">
+                            Giá phòng: {{ r.price }} VNĐ
+                        </span>
+                        <span style="color: #6B4F4F;">
+                            Số người: {{ r.max_guests-1 }}-{{ r.max_guests }}
+                        </span>
+                    </div>
+                    <!-- Nút hành động -->
+                    <div class="d-flex justify-content-around">
+                        <a href="{{ url_for('room_detail', room_type_id=r.id) }}"
+                           class="btn btn-outline-info"
+                           style="border-color: #8B6A53; color: #8B6A53;">
+                            Xem chi tiết
+                        </a>
+                        <a href="\booking"
+                           class="btn"
+                           style="background-color: #8B6A53; color: #F9F5EB;">
+                            Đặt phòng
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+
+<!-- Giới thiệu dịch vụ khách sạn -->
+<section class="container my-5" id="services">
+    <h2 class="fw-bold text-center mb-4"
+        style="color: #8B6A53; font-family: 'Playfair Display', serif;">
+        Dịch Vụ của T&T Hotel
+    </h2>
+    <div class="row">
+        <!-- Dịch vụ 1: Đồ ăn -->
+        <div class="col-lg-4 col-md-6 mb-4 text-center d-flex">
+            <div class="service-card p-4 shadow-sm border rounded d-flex flex-column"
+                 style="background-color: #F9F5EB; border-color: #D2B48C;">
+                <img src="static/images/food.jpg" alt="Dịch vụ đồ ăn" class="img-fluid mb-3"
+                     style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px;">
+                <h4 class="fw-bold mb-3" style="color: #4B3832;">Dịch Vụ Đồ Ăn</h4>
+                <p class="fs-5" style="color: #6B4F4F;">
+                    Chúng tôi phục vụ các món ăn đa dạng từ các nền ẩm thực trên thế giới, đảm bảo bạn có những bữa ăn tuyệt vời ngay trong khách sạn.
+                </p>
+            </div>
+        </div>
+
+        <!-- Dịch vụ 2: Bể bơi -->
+        <div class="col-lg-4 col-md-6 mb-4 text-center d-flex">
+            <div class="service-card p-4 shadow-sm border rounded d-flex flex-column"
+                 style="background-color: #F9F5EB; border-color: #D2B48C;">
+                <img src="static/images/pool.jpg" alt="Bể bơi" class="img-fluid mb-3"
+                     style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px;">
+                <h4 class="fw-bold mb-3" style="color: #4B3832;">Bể Bơi</h4>
+                <p class="fs-5" style="color: #6B4F4F;">
+                    Thư giãn tại bể bơi ngoài trời của chúng tôi, nơi bạn có thể tận hưởng làn nước mát lạnh và không gian thư giãn tuyệt vời.
+                </p>
+            </div>
+        </div>
+
+        <!-- Dịch vụ 3: Phòng gym -->
+        <div class="col-lg-4 col-md-6 mb-4 text-center d-flex">
+            <div class="service-card p-4 shadow-sm border rounded d-flex flex-column"
+                 style="background-color: #F9F5EB; border-color: #D2B48C;">
+                <img src="static/images/gym.jpg" alt="Phòng Gym" class="img-fluid mb-3"
+                     style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px;">
+                <h4 class="fw-bold mb-3" style="color: #4B3832;">Phòng Gym</h4>
+                <p class="fs-5" style="color: #6B4F4F;">
+                    Phòng gym của chúng tôi được trang bị đầy đủ máy móc hiện đại, giúp bạn duy trì thể lực trong suốt kỳ nghỉ.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container my-5">
+    <div class="row align-items-center">
+        <!-- Giới thiệu dịch vụ -->
+        <div class="col-lg-6">
+            <h2 class="fw-bold  mb-4" style="color: #4B3832;">Dịch Vụ Đưa Đón Sân Bay Miễn Phí</h2>
+            <p class="text-muted fs-5" style="line-height: 1.7;">
+                T&T Hotel cung cấp dịch vụ đưa đón sân bay miễn phí cho khách hàng, giúp bạn có một chuyến đi thuận lợi và dễ dàng hơn. Chúng tôi cam kết mang đến trải nghiệm tuyệt vời từ khi bạn đặt chân đến thành phố.
+            </p>
+        </div>
+
+        <!-- Hình ảnh dịch vụ -->
+        <div class="col-lg-6">
+            <img src="static/images/car.jpg" class="img-fluid rounded shadow" alt="Dịch vụ đưa đón sân bay" style="object-fit: cover; width: 100%; height: 400px;">
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

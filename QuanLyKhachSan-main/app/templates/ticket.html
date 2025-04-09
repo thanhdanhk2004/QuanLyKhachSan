@@ -1,0 +1,76 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<h2 class="text-center mb-4">Danh sách phiếu đã đặt</h2>
+<form method="GET" action="/ticket">
+    <div class="mb-3">
+        <button type="submit" name="status" value="not_checked_in" class="btn btn-outline-danger">
+            Chưa nhận phòng
+        </button>
+        <button type="submit" name="status" value="checked_in" class="btn btn-outline-success">
+            Đã nhận phòng
+        </button>
+        <button type="submit" name="status" value="checked_out" class="btn btn-outline-primary">
+            Đã trả phòng
+        </button>
+    </div>
+</form>
+{% if reservation|length == 0 %}
+    <div class="alert alert-info text-center mt-4" role="alert">
+            <strong>Chưa có phiếu đặt phòng nào!</strong> Vui lòng kiểm tra lại sau.
+        </div>
+{% else %}
+    <div class="container mt-5">
+
+    <!-- Thêm form lọc theo tình trạng -->
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="table-primary text-center">
+        <tr>
+            <th>STT</th>
+            <th>Mã đặt phòng</th>
+            <th>Các phòng đặt</th>
+            <th>Ngày nhận phòng</th>
+            <th>Ngày trả phòng</th>
+            <th>Chi tiết khách hàng đặt phòng</th>
+            <th>Tình trạng</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in reservation %}
+        <tr class="text-center">
+            <td>{{ loop.index }}</td>
+            <td>{{ r.reservation_code }}</td>
+            <td>
+                <ul class="list-unstyled">
+                    {% for b in r.booking %}
+                    <li>{{ b.room.name }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ r.checkin_date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ r.checkout_date.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#customerModal{{ r.id }}">
+                    Xem chi tiết khách hàng
+                </button>
+                <!-- Modal chi tiết khách hàng -->
+                <!-- Nội dung Modal bỏ qua -->
+            </td>
+            <td>
+                {% if not r.is_checked_in %}
+                    <span style="color: red;">Chưa nhận phòng</span>
+                {% elif r.is_checked_out %}
+                    <span>Đã trả phòng</span>
+                {% else %}
+                    <span style="color: green;">Đã nhận phòng</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endif %}
+{% endblock %}

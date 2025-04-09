@@ -1,0 +1,54 @@
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+    <div class="container">
+        <!-- Logo hoặc tên ứng dụng -->
+        <a class="navbar-brand fw-bold d-flex align-items-center text-white" href="/staff">
+            <i class="bi bi-person-badge me-2"></i> Quản Lý Khách Sạn
+        </a>
+
+        {% if current_user.is_authenticated %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarStaff" aria-controls="navbarStaff" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarStaff">
+            <!-- Menu chính -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="/staff">
+                        <i class="bi bi-house-door"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="rent">
+                        <i class="bi bi-key"></i> Thuê phòng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="staff_booking">
+                        <i class="bi bi-calendar-check"></i> Đặt phòng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="checkout">
+                        <i class="bi bi-credit-card"></i> Thanh toán
+                    </a>
+                </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="logout_staff">
+                        <i class="bi bi-box-arrow-right"></i> Đăng Xuất
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center ms-3">
+                <img src="{{ current_user.avatar }}" alt="Avatar" class="rounded-circle border border-white" style="width: 40px; height: 40px;">
+                <span class="text-white ms-2 fw-bold">{{ current_user.username }}</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+  </nav>
+</body>

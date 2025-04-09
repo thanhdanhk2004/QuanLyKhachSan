@@ -1,0 +1,115 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<!-- Container cho form tìm phòng -->
+<div class="container mt-5">
+    <form action="/booking" method="POST" class="mx-auto" style="max-width: 600px;">
+        <div class="card shadow-lg p-4 border-0" style="background-color: #F9F5EB;">
+            <h2 class="text-center mb-4" style="color: #6a4c38;">Tìm kiếm phòng trống</h2>
+            <div class="row g-3">
+                <!-- Ngày nhận phòng -->
+                <div class="col-12">
+                    <label for="checkin_date" class="form-label fw-bold" style="color: #6a4c38;">Ngày nhận
+                        phòng:</label>
+                    <input
+                            type="date"
+                            id="checkin_date"
+                            name="checkin_date"
+                            class="form-control form-control-lg border-primary"
+                            value="{{ checkin_date }}"
+                            required
+                            style="background-color: #fff3e0; color: #6a4c38;">
+                </div>
+
+                <!-- Ngày trả phòng -->
+                <div class="col-12">
+                    <label for="checkout_date" class="form-label fw-bold" style="color: #6a4c38;">Ngày trả
+                        phòng:</label>
+                    <input
+                            type="date"
+                            id="checkout_date"
+                            name="checkout_date"
+                            class="form-control form-control-lg border-primary"
+                            value="{{ checkout_date }}"
+                            required
+                            style="background-color: #fff3e0; color: #6a4c38;">
+                </div>
+                <div class="col-12 position-relative">
+    <label for="room_type_name" class="form-label fw-bold" style="color: #6a4c38;">Loại phòng:</label>
+    <div class="dropdown">
+        <select
+            id="room_type_name"
+            name="room_type_name"
+            class="form-control form-control-lg border-primary"
+            style="background-color: #fff3e0; color: #6a4c38; appearance: none; padding-right: 50px;">
+            <option value="" disabled selected>Chọn loại phòng theo yêu cầu của bạn</option>
+            <option value="">Tất cả</option>
+            {% for room_type in room_types %}
+            <option value="{{ room_type.name }}">{{ room_type.name }} (Tối đa {{ room_type.max_guests }} người)</option>
+            {% endfor %}
+        </select>
+        <span class="dropdown-toggle-icon" style="
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #6a4c38;
+            font-size: 1.5rem;
+            line-height: 1;">
+            &#9662;
+        </span>
+    </div>
+</div>
+
+
+                <!-- Nút Tìm phòng -->
+                <div class="col-12">
+                    <button type="submit" onclick="search_room()" class="btn"
+                            style="background-color: #6a4c38; color: white; width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: bold;">
+                        Tìm phòng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Thông báo khi không có phòng trống -->
+<div class="alert alert-warning" style="display: none; margin-top: 30px;" id="no-room"
+     style="background-color: #fff3e0; color: #6a4c38;">
+    Không có phòng trống trong thời gian bạn chọn!
+</div>
+
+<div id="available-rooms-container" style="display: none;" class="mt-5 text-center">
+    <h3 id="room-list-title" class="mb-4" style="color: # FFDEAD;">Danh sách phòng trống</h3>
+    <form id="room-selection-form" class="p-4 border rounded shadow-sm" onsubmit="checkRoomSelectionBook(event)"
+          style="background-color: #f9f9f9;">
+        <ul class="list-group" id="room-list" style="display: none; margin-bottom: 20px;">
+            <!-- Các phòng trống sẽ được hiển thị ở đây -->
+        </ul>
+
+        {% if current_user.is_authenticated %}
+        <!-- Nút xác nhận chọn phòng nếu người dùng đã đăng nhập -->
+        <button type="submit" class="btn"
+                style="background-color: #a6896b; color: white; width: 100%; padding: 0.8rem; font-size: 1rem; font-weight: bold; border: none; margin-top: 20px; border-radius: 5px; transition: background-color 0.3s ease;">
+            Xác nhận chọn phòng
+        </button>
+        <style>
+            .btn:hover {
+                background-color: #8e7259;
+            }
+        </style>
+        {% else %}
+        <!-- Thông báo yêu cầu đăng nhập nếu người dùng chưa đăng nhập -->
+        <div class="alert alert-info text-center shadow-sm" role="alert"
+             style="background-color: #e3f2fd; color: #1e88e5; border-radius: 5px; margin-top: 20px;">
+            Vui lòng <a href="/login" class="alert-link" style="color: #1565c0; text-decoration: underline;">đăng
+            nhập</a> để đặt phòng.
+        </div>
+        {% endif %}
+    </form>
+
+</div>
+
+{% endblock %}

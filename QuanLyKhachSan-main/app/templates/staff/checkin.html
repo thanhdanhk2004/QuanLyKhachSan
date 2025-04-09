@@ -1,0 +1,153 @@
+{% extends 'staff/master.html' %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Danh sách Booking</h2>
+
+    <!-- Thanh tìm kiếm -->
+    <form method="GET" action="checkin" class="mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-3">
+            <div class="input-group shadow-sm">
+                <input type="text" name="search" class="form-control"
+                       placeholder="Tìm kiếm theo tên người đặt..."
+                       value="{{ request.args.get('search', '') }}">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group shadow-sm">
+                <input type="text" name="reservation_code" class="form-control"
+                       placeholder="Tìm kiếm theo mã đặt phòng..."
+                       value="{{ request.args.get('reservation_code', '') }}">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-search"></i> Tìm kiếm
+            </button>
+        </div>
+    </div>
+</form>
+
+    {% if pages > 1 %}
+    <ul class="pagination mt-1">
+        {% for i in range(1, pages +1) %}
+        <li class="page-item"><a class="page-link" href="/checkin?page={{ i }}">{{ i }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <!-- Bảng danh sách -->
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="table-primary text-center">
+        <tr>
+            <th>STT</th>
+            <th>Mã đặt phòng</th>
+            <th>Người đặt phòng</th>
+            <th>Số liên lạc</th>
+            <th>Các phòng đặt</th>
+            <th>Ngày nhận phòng</th>
+            <th>Ngày trả phòng</th>
+            <th>Chi tiết khách hàng đặt phòng</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in reservation %}
+        <tr class="text-center">
+            <td>{{ loop.index }}</td>
+            <td>{{ r.reservation_code }}</td>
+            <td>{{ r.customer_name }}</td>
+            <td>{{ r.contact_phone }}</td>
+            <td>
+                <ul class="list-unstyled">
+                    {% for b in r.booking %}
+                    <li>{{ b.room.name }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ r.checkin_date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ r.checkout_date.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <ul class="list-unstyled">
+                    <li>
+                        <!-- Nút xem chi tiết khách hàng cho toàn bộ reservation -->
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#customerModal{{ r.id }}">
+                            Xem chi tiết khách hàng
+                        </button>
+
+                        <!-- Modal hiển thị danh sách khách hàng của tất cả các phòng trong reservation -->
+                        <div class="modal fade" id="customerModal{{ r.id }}" tabindex="-1"
+                             aria-labelledby="customerModalLabel{{ r.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="customerModalLabel{{ r.id }}">
+                                            Chi tiết khách hàng
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-striped table-hover">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>Phòng</th>
+                                                <th>Tên khách</th>
+                                                <th>CMND</th>
+                                                <th>Loại khách</th>
+                                                <th>Địa chỉ</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for b in r.booking %}
+                                            {% for c in b.customer %}
+                                            <tr>
+                                                <td>{{ b.room.name }}</td>
+                                                <td>{{ c.name }}</td>
+                                                <td>{{ c.id_card }}</td>
+                                                <td>{% if c.customer_type.value == 'Quốc tế' %} Quốc tế {% else %} Nội
+                                                    địa {% endif %}
+                                                </td>
+                                                <td>{{ c.address }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+
+            </td>
+            <td>
+                <!-- Kiểm tra nếu checkin_date > hiện tại -->
+                {% if r.checkin_date > current_time %}
+                    <button class="btn btn-success btn-sm" disabled>Check-in</button>
+                {% else %}
+                    <button class="btn btn-danger btn-sm" onclick="checkIn({{ r.id }})">Check-in</button>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% else %}
+        <tr class="text-center">
+            <td colspan="7" class="text-danger">Không có booking nào để check-in.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

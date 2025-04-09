@@ -1,0 +1,81 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h1 class="text-danger text-center mt-1">THỐNG KÊ DOANH THU THEO THÁNG</h1>
+
+<div class="row">
+    <div class="col-md-6 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Tháng</th>
+                <th>Doanh thu</th>
+            </tr>
+            {% for s in month_stats %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ "{:,.1f}".format(s[1]) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <form>
+            <div class="form-group">
+                <input type="number" min="2000" class="form-control" placeholder="Nhập năm..." name="year" />
+            </div>
+            <input type="submit" value="Thống kê" class="btn btn-danger mt-3"/> <!-- Thêm lớp mt-3 -->
+        </form>
+        <canvas id="monthChartId"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let labels2=[]
+    let data2=[]
+    let colors2=[]
+    let borderColors2=[]
+    let r,g,b;
+
+    {% for s in month_stats %}
+    labels2.push({{ s[0] }})
+    data2.push({{ s[1] }})
+
+    r = Math.random()*255
+    g = Math.random()*255
+    b = Math.random()*255
+
+    colors2.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+    borderColors2.push(`rgba(${r}, ${g}, ${b}, 1)`)
+    {% endfor %}
+
+
+    window.onload = function(){
+        const ctx2 = document.getElementById('monthChartId').getContext('2d');
+              loadChart(ctx2,labels2, data2, 'bar', colors2, borderColors2, 'Doanh thu theo tháng')
+                }
+
+    function loadChart(ctx, labels, data, type, colors, borderColors, label){
+        new Chart(ctx, {
+    type: type,
+    data: {
+      labels: labels,
+      datasets: [{
+        label: label,
+        data: data,
+        backgroundColor: colors,
+        borderCOlor:borderColors,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+    }
+</script>
+{% endblock %}
